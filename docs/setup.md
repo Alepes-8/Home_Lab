@@ -48,3 +48,61 @@ When the ubuntu server is setup it is time to setup the require pre requirstes, 
 
 
 ## project setup
+
+When setting up the code there are multiple ways to do so. But the cleanest way to go through the setup and have it done correctly is by following the give steps:
+
+1. Clone the repo onto your development machine and to the following prepwork
+    1. get your public key for the **bootstap.sh file**, which is done through
+        ```
+        cat ~/.ssh/id_ed25519.pub
+        ```
+        - if you done have one, run
+        ```
+        ssh-keygen -t ed25519 -C "your@email.com"
+        ```
+        - which creates ~/.ssh/id_ed25519 — private key, never touch this and ~/.ssh/id_ed25519.pub — public key, this is what you share. it will then look like ssh-ed25519 AAAAC3Nza... your@email.com
+        - copy the whole string and add it to the bootstrap.sh file, where it asks for TODO
+    2. create .env.prod and create .env.staging
+        - make sure you update mongo_uri to the following as it should not be local host.
+        ```
+        MONGO_URI=mongodb://mongo:27017/drink
+        ```
+        - make sure they are placed in the docker-compose folder to make sure its easy to apply in the docker-compose.staging and prod
+    3. 
+    
+
+2. Login to the server through ssh connection. read **access-server.md** for further descriptions on how to do that.
+2. When in, Get bootstrap onto server via one of the following options
+    1. Copies the file from your local machine to the server over SSH. Then SSH in and run it.
+    ``` 
+    scp bootstrap.sh user@192.168.1.30:~/bootstrap.sh  
+    ```
+    2. copy paste: SSH into the server, create the file manually 
+    ```
+    nano bootstrap.sh
+    # paste the contents, Ctrl+X to save
+    sudo bash bootstrap.sh
+    ```
+    3. curl from GitHub (cleanest): If your repo is public, you can pull the raw file directly on the server
+    ```
+    curl -o bootstrap.sh https://raw.githubusercontent.com/Alepes-8/Drink-CatalogV2/main/scripts/bootstrap.sh
+    sudo bash bootstrap.sh
+    ```
+3. Run bootstrap — installs Docker, configures firewall, adds SSH key
+    - run bootstrap by executing the following command:
+    ```
+    cd scripts
+    sudo bash bootstrap.sh
+    ```
+4. Clone the repo onto the server
+    ```
+    git clone https://github.com/Alepes-8/Home_Lab.git
+    ```
+5. Copy .env files onto the server via scp
+    - as the **.env** is never commited due to **.gitignore** we make sure that we add env correctly. So we can use scp
+    ```
+    scp /e/Programing/Home_Lab/Drink-CatalogV2/.env.prod user@192.168.1.30:~/Drink-CatalogV2/.env.prod
+    scp /e/Programing/Home_Lab/Drink-CatalogV2/.env.staging user@192.168.1.30:~/Drink-CatalogV2/.env.staging
+    ```
+6. Run the rollback script or docker compose manually
+    - 

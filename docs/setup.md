@@ -102,4 +102,9 @@ When setting up the code there are multiple ways to do so. But the cleanest way 
     scp /e/Programing/Home_Lab/Drink-CatalogV2/.env.prod user@192.168.1.30:~/Drink-CatalogV2/.env.prod
     scp /e/Programing/Home_Lab/Drink-CatalogV2/.env.staging user@192.168.1.30:~/Drink-CatalogV2/.env.staging
     ```
-7. Run the rollback script or docker compose manually
+7. Go through the step 1-5 that is proposed after the bootstap.sh is executed
+8. run 
+```
+docker network create homelab-network
+```
+8. Run the rollback script or docker compose manually

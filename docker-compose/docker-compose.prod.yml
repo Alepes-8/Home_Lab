@@ -1,4 +1,9 @@
 version: "3.8"
+
+networks:
+  homelab-network:
+    external: true  # tells compose this network already exists, don't create it
+
 services:
   mongo-prod-database:
     image: mongo:latest
@@ -13,9 +18,13 @@ services:
       - mongo-prod-data:/data/db
 
   drink_api_prod:
+    networks:
+      - homelab-network
     depends_on:
       mongo-prod-database:
         condition: service_healthy
+        networks:
+          - homelab-network
     container_name: drink_api_prod
     image: ghcr.io/alepes-8/drink_api_home_lab:${IMAGE_TAG:-latest}
     restart: unless-stopped
@@ -46,3 +55,7 @@ services:
 
 volumes:
   mongo-prod-data:
+
+networks:
+  homelab-network:
+    external: true

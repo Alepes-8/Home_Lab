@@ -68,14 +68,10 @@ When setting up the code there are multiple ways to do so. But the cleanest way 
         MONGO_URI=mongodb://mongo:27017/drink
         ```
         - make sure they are placed in the docker-compose folder to make sure its easy to apply in the docker-compose.staging and prod
-    3. 
-    
-
-2. Login to the server through ssh connection. read **access-server.md** for further descriptions on how to do that.
-2. When in, Get bootstrap onto server via one of the following options
+2. Open a terminal in the scripts folder, then get bootstrap onto server via one of the following options 
     1. Copies the file from your local machine to the server over SSH. Then SSH in and run it.
     ``` 
-    scp bootstrap.sh user@192.168.1.30:~/bootstrap.sh  
+    scp bootstrap.sh homelab@192.168.1.xxx:~/bootstrap.sh  
     ```
     2. copy paste: SSH into the server, create the file manually 
     ```
@@ -88,21 +84,22 @@ When setting up the code there are multiple ways to do so. But the cleanest way 
     curl -o bootstrap.sh https://raw.githubusercontent.com/Alepes-8/Drink-CatalogV2/main/scripts/bootstrap.sh
     sudo bash bootstrap.sh
     ```
-3. Run bootstrap — installs Docker, configures firewall, adds SSH key
+3. Login to the server through ssh connection. read **access-server.md** for further descriptions on how to do that.
+4. Run bootstrap — installs Docker, configures firewall, adds SSH key
     - run bootstrap by executing the following command:
     ```
     cd scripts
     sudo bash bootstrap.sh
     ```
-4. Clone the repo onto the server
+    - When it asks if you wanna automaticly restart docker deamon, say yes.
+5. Clone the repo onto the server
     ```
     git clone https://github.com/Alepes-8/Home_Lab.git
     ```
-5. Copy .env files onto the server via scp
+6. Copy .env files onto the server via scp
     - as the **.env** is never commited due to **.gitignore** we make sure that we add env correctly. So we can use scp
     ```
     scp /e/Programing/Home_Lab/Drink-CatalogV2/.env.prod user@192.168.1.30:~/Drink-CatalogV2/.env.prod
     scp /e/Programing/Home_Lab/Drink-CatalogV2/.env.staging user@192.168.1.30:~/Drink-CatalogV2/.env.staging
     ```
-6. Run the rollback script or docker compose manually
-    - 
+7. Run the rollback script or docker compose manually

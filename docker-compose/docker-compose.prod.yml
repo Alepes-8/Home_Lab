@@ -4,6 +4,8 @@ services:
   mongo-prod-database:
     image: mongo:latest
     container_name: mongo-prod
+    networks:
+      - homelab-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
@@ -31,12 +33,6 @@ services:
       retries: 3
     ports:
       - "${PORT:-5001}:${PORT:-5001}"
-    environment:
-      - PORT=${PORT:-5001}
-      - MONGO_URI=${MONGO_URI:-dummy}
-      - JWT_SECRET=${JWT_SECRET:-dummy}
-      - APP_ADMIN_USERNAME=${APP_ADMIN_USERNAME:-dummy}
-      - APP_ADMIN_PASSWORD=${APP_ADMIN_PASSWORD:-dummy}
 
   nginx:
     image: nginx:alpine

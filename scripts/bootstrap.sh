@@ -130,6 +130,7 @@ fi
 section "Creating log directories"
 
 mkdir -p /var/log/homelab/drink_api
+chmod 777 /var/log/homelab/drink_api
 chown -R "$REAL_USER:$REAL_USER" /var/log/homelab
 echo "  Log directories created."
 

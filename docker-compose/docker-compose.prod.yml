@@ -14,6 +14,8 @@ services:
       - mongo-prod-data:/data/db
 
   drink_api_prod:
+    env_file:
+      - .env.prod
     networks:
       - homelab-network
     depends_on:

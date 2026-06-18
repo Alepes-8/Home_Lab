@@ -13,6 +13,8 @@ services:
       - mongo-staging-data:/data/db
 
   drink_api_staging:
+    env_file:
+      - .env.staging
     networks:
       - homelab-network
     depends_on:

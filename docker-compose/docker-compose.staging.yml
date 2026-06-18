@@ -1,9 +1,5 @@
 version: "3.8"
 
-networks:
-  homelab-network:
-    external: true  # tells compose this network already exists, don't create it
-
 services:
   mongo-staging-database:
     image: mongo:latest
@@ -22,8 +18,6 @@ services:
     depends_on:
       mongo-staging-database:
         condition: service_healthy
-        networks:
-          - homelab-network
     container_name: drink_api_staging
     image: ghcr.io/alepes-8/drink_api_home_lab:${IMAGE_TAG:-latest}
     healthcheck:

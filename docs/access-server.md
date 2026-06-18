@@ -27,3 +27,12 @@ When accessing the server, as it is ment to be handled remotly it is important t
     - the **xxx** represent the specific ip address that was set in the **How to** step of **Static server IP**
 - write yes when it asks for fingerprint
 - write the password, press enter, and you are in.
+
+## UFW (Uncomplicated Firewall)
+
+Is a tool to control what the network traffic allows in and out of the server. By defualt it blocks everything, but with the current setup it will allow for 
+- 22 — SSH, so you can actually connect to the machine remotely
+- 5001 — prod API
+- 5002 — staging API
+- 80 — HTTP Nginx (for when that's set up) (unencrypted)
+- 443 - HTTPS Nginx  (encrypted, via TLS/SSL)

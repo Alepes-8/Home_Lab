@@ -4,6 +4,8 @@ services:
   mongo-staging-database:
     image: mongo:latest
     container_name: mongo-staging
+    networks:
+      - homelab-network
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -29,12 +31,6 @@ services:
       retries: 3
     ports:
       - "${PORT:-5002}:${PORT:-5002}"
-    environment:
-      - PORT=${PORT:-5002}
-      - MONGO_URI=${MONGO_URI:-dummy}
-      - JWT_SECRET=${JWT_SECRET:-dummy}
-      - APP_ADMIN_USERNAME=${APP_ADMIN_USERNAME:-dummy}
-      - APP_ADMIN_PASSWORD=${APP_ADMIN_PASSWORD:-dummy}
 
   nginx:
     image: nginx:alpine
@@ -43,7 +39,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ../config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/nginx.staging.conf:/etc/nginx/nginx.staging.conf:ro
     depends_on:
       - drink_api_staging
 

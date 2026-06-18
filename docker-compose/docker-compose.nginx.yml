@@ -1,0 +1,17 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    networks:
+      - homelab-network
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx/nginx.staging.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - drink_api_staging
+
+networks:
+  homelab-network:
+    external: true

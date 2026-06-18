@@ -20,6 +20,8 @@ services:
       - .env.prod
     networks:
       - homelab-network
+    volumes:
+      - /var/log/homelab/drink_api:/var/log/homelab/drink_api
     depends_on:
       mongo-prod-database:
         condition: service_healthy

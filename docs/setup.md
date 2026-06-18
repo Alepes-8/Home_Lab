@@ -107,4 +107,28 @@ When setting up the code there are multiple ways to do so. But the cleanest way 
 ```
 docker network create homelab-network
 ```
-8. Run the rollback script or docker compose manually
+8. Run git clone [project-git-link]
+9. run the given command to navigate into the project and create env files(fill in the nessusary information for env files)
+```
+cd Home_lab/docker-compose/
+sudo chmod +x scripts/setup-env.sh
+```
+    - This is in order to setup the local .env files for prod and staging.
+10. run the given command to verify that .env files was created (you should see them among the file options)
+```
+ls -la
+```
+11. In order to aquire the code from the github package location, we will need to give the server access to the token in which allows for accessing and aquiring of the package.
+    - First of, if you don't know it by heart(unlikely) you will need to get it somehow. So either create a new GHCR_PAT key and copy it to add into both the drink api and the server.
+        - so go to https://github.com/settings/tokens and renew token.
+    - add it to the server by doing the following
+    ```
+    echo YOUR_PAT_CODE | docker login ghcr.io -u [user name (example: Alepes-8)] --password-stdin
+    ```
+    - With the **YOUR_PAT_HERE** should be substituted with your new token.
+12. Then setup the docker container through running
+```
+docker compose -f docker-compose.staging.yml up -d
+```
+13. 
+

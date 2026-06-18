@@ -19,6 +19,8 @@ services:
       - .env.staging
     networks:
       - homelab-network
+    volumes:
+      - /var/log/homelab/drink_api:/var/log/homelab/drink_api
     depends_on:
       mongo-staging-database:
         condition: service_healthy

@@ -124,6 +124,16 @@ else
 fi
 
 # =============================================================
+#  4b. CREATE LOG DIRECTORIES
+# =============================================================
+
+section "Creating log directories"
+
+mkdir -p /var/log/homelab/drink_api
+chown -R "$REAL_USER:$REAL_USER" /var/log/homelab
+echo "  Log directories created."
+
+# =============================================================
 #  5. CONFIGURE FIREWALL (UFW)
 # =============================================================
 
@@ -212,6 +222,7 @@ fi
 
 echo
 echo "  ✓ Bootstrap complete."
+echo "    Log directories created at /var/log/homelab"
 echo
 echo "  Next steps:"
 echo "    1. Log out and back in for Docker group permissions to take effect"

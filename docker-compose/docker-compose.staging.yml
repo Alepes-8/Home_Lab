@@ -25,7 +25,7 @@ services:
       mongo-staging-database:
         condition: service_healthy
     container_name: drink_api_staging
-    image: ghcr.io/alepes-8/drink_api_home_lab:${IMAGE_TAG:-latest}
+    image: ghcr.io/alepes-8/drink_api_home_lab:${IMAGE_TAG:-staging}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT:-5002}/drink/health"]
       interval: 30s

@@ -1,0 +1,18 @@
+name: Deploy Staging
+
+on:
+  repository_dispatch:
+    types: [staging-deploy]
+
+jobs:
+  deploy:
+    runs-on: self-hosted    # Use self-hosted runner to have access to Docker and the homelab network
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pull and restart staging
+        working-directory: docker-compose
+        run: |
+          docker compose -f docker-compose.staging.yml pull
+          docker compose -f docker-compose.staging.yml up -d

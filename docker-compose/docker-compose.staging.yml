@@ -34,17 +34,6 @@ services:
     ports:
       - "${PORT:-5002}:${PORT:-5002}"
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ../nginx/nginx.staging.conf:/etc/nginx/nginx.staging.conf:ro
-    depends_on:
-      - drink_api_staging
-
 volumes:
   mongo-staging-data:
 

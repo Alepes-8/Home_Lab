@@ -36,17 +36,6 @@ services:
     ports:
       - "${PORT:-5001}:${PORT:-5001}"
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ../config/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - drink_api_prod
-
 volumes:
   mongo-prod-data:
 

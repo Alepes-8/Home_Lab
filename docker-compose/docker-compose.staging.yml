@@ -16,7 +16,7 @@ services:
 
   drink_api_staging:
     env_file:
-      - .env.staging
+      - /home/homelab/Home_Lab/docker-compose/.env.staging
     networks:
       - homelab-network
     volumes:

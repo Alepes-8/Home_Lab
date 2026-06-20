@@ -17,7 +17,7 @@ services:
 
   drink_api_prod:
     env_file:
-      - .env.prod
+      - /home/homelab/Home_Lab/docker-compose/.env.prod
     networks:
       - homelab-network
     volumes:

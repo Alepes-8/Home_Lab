@@ -4,20 +4,21 @@
 
 homelab/
 ├── docker-compose/
-│ ├── docker-compose.dev.yml # Old laptop optional
+│ ├── .env.prod
+│ ├── .env.staging
 │ ├── docker-compose.staging.yml # Old PC staging
 │ ├── docker-compose.prod.yml # Old PC prod
 │ ├── docker-compose.jenkins.yml # Old PC Jenkins
+│ ├── docker-compose.nginx.yml # Old PC nginx
 │ └── docker-compose.monitoring.yml # Pi monitoring
 │
 ├── nginx/
 │ ├── nginx.conf
 │ ├── sites/
-│ │ ├── api.local.conf
+│ │ ├── prod.local.conf
 │ │ ├── staging.local.conf
 │ │ ├── jenkins.local.conf
 │ │ └── grafana.local.conf
-│ └── Dockerfile (if custom Nginx image)
 │
 ├── wireguard/
 │ ├── wg0.conf.template # Template with placeholders
@@ -26,6 +27,7 @@ homelab/
 │
 ├── scripts/
 │ ├── bootstrap-ubuntu.sh # Initial server setup
+│ ├── setup-env.sh # Initial env prod and staging
 │ ├── backup-mongodb.sh # Cron job for backups
 │ ├── verify-backups.sh # Backup verification
 │ ├── deploy-to-staging.sh # Manual deploy helper

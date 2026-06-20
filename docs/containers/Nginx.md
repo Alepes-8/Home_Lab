@@ -1,4 +1,4 @@
-# Nginx Info
+# Nginx Info (A reverse proxy)
 
 - It's the middleman that the browser contacts, which then navigates to and contacts the necessary server/container.
 - It's connected to the same Docker container network, so it can reach the containers on its own.
@@ -24,3 +24,7 @@ Note: `nginx.conf` contains some useful information worth keeping in mind if a n
 For a smaller system, it's reasonable to place all the service locations in one `nginx.conf` file. However, in order to create some separation and allow for decoupling of responsibilities, the different Docker Compose setups have been split into different site files — so staging lives in its own `staging.local.conf` file.
 
 Note: if one later wants to add a new service, it can be worth updating the location so it says `location /api` instead of `location /`. This would allow the system to differentiate between one service and another — for example, one being `location /api` and another `location /weight`.
+
+## Protection
+
+Nginx listens on one or more ports, which allows users to contact the system through that port (80, in this case). This means we cannot go around nginx by contacting port 80 directly, since doing so *is* contacting nginx. We can circumvent nginx if other ports are open, such as 5001 or 5002; however, if no other ports are open, then all communication must go through nginx's reverse proxy port.

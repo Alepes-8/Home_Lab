@@ -26,7 +26,7 @@ services:
       mongo-prod-database:
         condition: service_healthy
     container_name: drink_api_prod
-    image: ghcr.io/alepes-8/drink_api_home_lab:${IMAGE_TAG:-latest}
+    image: ghcr.io/alepes-8/drink_api_home_lab:${IMAGE_TAG:-prod}
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT:-5001}/drink/health"]

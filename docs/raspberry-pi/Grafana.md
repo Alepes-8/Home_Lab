@@ -1,6 +1,6 @@
 # Grafana
 
-Grafana is an open-source dashboarding tool that visualises data from an external source. In this project that source is Prometheus. Rather than building a custom visualisation layer, Grafana handles that work out of the box — and its dashboards can be customised and extended as the project grows without starting from scratch.
+Grafana is an open-source dashboarding tool that visualises data from an external source. In this project that source is Prometheus. Rather than building a custom visualisation layer, Grafana handles that work out of the box, and its dashboards can be customised and extended as the project grows without starting from scratch.
 
 ---
 
@@ -18,7 +18,7 @@ For the broader Pi architecture, see [raspberry-pi.md](raspberry-pi.md). For how
 
 ## Setup
 
-Grafana runs as a Docker container on the Pi alongside Prometheus, managed by `docker-compose.monitoring.yml` in the `Home_Lab` repo.
+Grafana runs as a Docker container on the Pi alongside Prometheus and Alertmanager, managed by `docker-compose.monitoring.yml` in the `Home_Lab` repo.
 
 Once `bootstrap-pi.sh` has run and Docker is installed:
 
@@ -29,26 +29,27 @@ docker compose -f docker-compose/docker-compose.monitoring.yml up -d
 
 Grafana will be at `http://192.168.1.50:3100` on the LAN, or via WireGuard when remote.
 
-**First login:**
-- Default credentials: `admin` / `admin`
-- Change the password immediately when prompted.
+**Credentials** are set via `.env.grafana` on the Pi (created by `setup-env-pi.sh` before bootstrap runs). The default in that file is `admin`/`admin` — change it when prompted on first login, or set a strong password when running `setup-env-pi.sh`.
 
-**Adding Prometheus as a data source:**
-1. Open Grafana at `http://192.168.1.50:3100`.
-2. Go to **Connections → Data sources → Add data source**.
-3. Select **Prometheus**.
-4. Set the URL to `http://prometheus:9090` — this uses the Docker service name since both containers share a network in `docker-compose.monitoring.yml`.
-5. Click **Save & test** and confirm it succeeds.
+**Data source and dashboards are provisioned automatically** on first startup via the following files in the repo:
 
-**Dashboards:**
-- Pre-built dashboards are available at [grafana.com/grafana/dashboards](https://grafana.com/grafana/dashboards) and can be imported by ID directly from the UI.
-- For application-level metrics from `prom-client` (request count, response time, active requests), build a custom dashboard using the metric names defined in the API's Prometheus middleware.
+| File | Purpose |
+|---|---|
+| `grafana/provisioning/datasources/datasource.yml` | Connects Grafana to Prometheus at `http://prometheus:9090` |
+| `grafana/provisioning/dashboards/dashboard.yml` | Tells Grafana where to load dashboard JSON files from |
+| `grafana/provisioning/dashboards/system-overview.json` | Starting dashboard with request rate panels for prod and staging |
+
+No manual UI steps are needed for the initial data source or dashboard setup — they load automatically when the container starts.
+
+**Adding dashboards:**
+- Pre-built dashboards are available at [grafana.com/grafana/dashboards](https://grafana.com/grafana/dashboards) and can be imported by ID directly from the UI, or added as JSON files to `grafana/provisioning/dashboards/` and committed to the repo.
+- For application-level metrics from `prom-client` (request count, response time, active requests), build panels using the metric names defined in the API's Prometheus middleware.
+- System-level panels (CPU, memory, disk) can be added once Node Exporter is deployed on the old PC.
 
 ---
 
 ## Open items
 
-- Pick an alerting transport (email, Discord webhook, or ntfy.sh) for when a target goes down or a metric crosses a threshold.
-- Persist dashboard and data source config to a volume in `docker-compose.monitoring.yml` so it survives container recreation.
-- Look at Grafana provisioning (YAML-based config) to make the setup repeatable without manual UI steps after a fresh deploy.
+- Configure Discord webhook in Alertmanager for notifications when a target goes down — see `alertmanager/config.yml` and [prometheus.md](prometheus.md).
+- Expand `system-overview.json` with more panels as the project grows.
 - Add system-level metric panels (CPU, memory, disk) once Node Exporter is deployed on the old PC.

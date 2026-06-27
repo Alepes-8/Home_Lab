@@ -64,9 +64,50 @@ The nginx `location /metrics` block needs to exist in each site config on the ol
 
 ---
 
+## Alertmanager
+
+Prometheus evaluates alert rules and fires alerts, but it does not send notifications on its own. That is Alertmanager's job. When Prometheus detects that a rule condition has been met — say, a scrape target has been unreachable for two minutes — it pushes that alert to Alertmanager, which then routes it to a configured destination (Discord, email, etc.).
+
+This means you can get notified when the server goes down without having to manually check Grafana or connect via WireGuard. Alertmanager handles deduplication and repeat intervals too, so you do not get spammed if something stays broken for hours.
+
+Alertmanager has no awareness of your services on its own. It is purely downstream of Prometheus — nothing reaches it unless Prometheus sends it an alert first.
+
+```
+Prometheus evaluates rules → fires alert → pushes to Alertmanager → routes to Discord/email/etc
+```
+
+### How it is configured
+
+Four files together make up the alerting setup:
+
+**`docker-compose.monitoring.yml`** runs the Alertmanager container and mounts two things: the config file from the repo, and a named volume for persistent state. The volume matters because Alertmanager stores active silences and notification state on disk — without it, a container restart would forget any silences you had set.
+
+**`alertmanager/config.yml`** tells Alertmanager where to send alerts and how often. Routes define which alerts go where, and receivers define the actual destination (webhook URL, email address, etc.). You can also separate critical alerts from general ones by routing them to different receivers. Currently configured with a placeholder receiver — no notifications are sent until a real transport is added.
+
+**`prometheus/prometheus.yml`** tells Prometheus where Alertmanager is running (`alertmanager:9093`) and where to find the rule files to evaluate.
+
+**`prometheus/rules/homelab.yml`** defines the actual alert conditions — what triggers an alert, how long the condition must hold before firing, and what severity to attach. Currently contains one rule: `TargetDown`, which fires when any scrape target has been unreachable for two minutes.
+
+### Adding Discord later
+
+When you are ready to add notifications, open `alertmanager/config.yml` and replace the placeholder receiver with:
+
+```yaml
+receivers:
+  - name: 'discord'
+    discord_configs:
+      - webhook_url: 'https://discord.com/api/webhooks/YOUR_WEBHOOK_URL'
+        title: 'Homelab Alert'
+        message: '{{ .CommonAnnotations.summary }}'
+```
+
+Update `route.receiver` to `'discord'` and reload Alertmanager. No other files need to change.
+
+---
+
 ## Open items
 
-- Set a retention policy before deploying (e.g. `--storage.tsdb.retention.time=30d`) to cap disk usage on the Pi's NVMe.
-- Set up Alertmanager for alert routing once the stack is running.
 - Add Node Exporter to the old PC to expose system-level metrics (CPU, memory, disk) alongside the application metrics from `prom-client`.
+- Configure Discord webhook in `alertmanager/config.yml` once notifications are wanted.
 - Consider Blackbox Exporter later for synthetic endpoint checks.
+- Add more alert rules to `prometheus/rules/homelab.yml` as the system grows (high memory, slow response times, etc.).

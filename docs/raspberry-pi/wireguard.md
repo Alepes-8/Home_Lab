@@ -34,7 +34,13 @@ cat client-public.key    # goes into wg0.conf on the Pi
 
 **Step 2 — Register the device as a peer on the Pi**
 
-Edit `/etc/wireguard/wg0.conf` and add a `[Peer]` block:
+Edit `/etc/wireguard/wg0.conf` 
+
+```
+sudo nano /etc/wireguard/wg0.conf
+```
+
+and add a `[Peer]` block:
 
 ```ini
 [Peer]

@@ -36,7 +36,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     env_file:
-      - /home/homelab/Home_Lab/docker-compose/.env.grafana
+      - .env.grafana
     volumes:
       - monitoring-grafana-data:/var/lib/grafana
       - ../grafana/provisioning:/etc/grafana/provisioning

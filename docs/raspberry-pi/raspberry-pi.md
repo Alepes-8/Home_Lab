@@ -55,11 +55,15 @@ The Pi setup follows a similar pattern to the server, but the tools are differen
    git clone https://github.com/Alepes-8/Home_Lab.git
    cd Home_Lab
    ```
-5. Run the bootstrap script:
+5. Run the setup-env-pi.sh script from within the docker compose folder:
+  ```bash
+    cd docker-compose && sudo bash ../scripts/setup-env-pi.sh
+   ```
+6. Run the bootstrap script:
    ```bash
    sudo bash scripts/bootstrap-pi.sh
    ```
-6. Follow the next steps printed at the end of the script.
+7. Follow the next steps printed at the end of the script.
 
 For router configuration (DHCP reservation and port forwarding), see [router-setup.md](router-setup.md).
 For DDNS setup, see [ddns-setup.md](ddns-setup.md).

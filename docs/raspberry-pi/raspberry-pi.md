@@ -50,20 +50,29 @@ The Pi setup follows a similar pattern to the server, but the tools are differen
 1. Flash **Raspberry Pi OS Lite (64-bit)** using Raspberry Pi Imager. Use the advanced settings panel (gear icon) to set the hostname, enable SSH, and configure your username and password before writing the card. This means you never need a monitor or keyboard once it boots.
 2. Plug the Pi into the router via ethernet and power it on.
 3. Find its IP in your router's DHCP client list and SSH in.
-4. Clone the `Home_Lab` repo:
+4. Find the Pi's MAC address:
+   ```bash
+   ip link show eth0
+   ```
+   Copy the `link/ether` value (e.g. `dc:a6:32:xx:xx:xx`) and go into your router to create a DHCP reservation mapping that MAC address to `192.168.1.50`. See [router-setup.md](router-setup.md) for how to do this. Once done, reboot the Pi and confirm it gets `192.168.1.50`:
+   ```bash
+   ip a
+   ```
+5. Clone the `Home_Lab` repo:
    ```bash
    git clone https://github.com/Alepes-8/Home_Lab.git
    cd Home_Lab
    ```
-5. Run the setup-env-pi.sh script from within the docker compose folder:
-  ```bash
-    cd docker-compose && sudo bash ../scripts/setup-env-pi.sh
-   ```
-6. Run the bootstrap script:
+6. Run the environment setup script from within the docker-compose folder:
    ```bash
+   cd docker-compose && sudo bash ../scripts/setup-env-pi.sh
+   ```
+7. Run the bootstrap script:
+   ```bash
+   cd ~/Home_Lab
    sudo bash scripts/bootstrap-pi.sh
    ```
-7. Follow the next steps printed at the end of the script.
+8. Follow the next steps printed at the end of the script.
 
 For router configuration (DHCP reservation and port forwarding), see [router-setup.md](router-setup.md).
 For DDNS setup, see [ddns-setup.md](ddns-setup.md).

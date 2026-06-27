@@ -1,0 +1,20 @@
+{
+  "title": "System Overview",
+  "uid": "system-overview",
+  "version": 1,
+  "schemaVersion": 16,
+  "panels": [
+    {
+      "title": "Drink API prod — request rate",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "targets": [{"expr": "rate(http_requests_total{job=\"drink_api_prod\"}[5m])"}]
+    },
+    {
+      "title": "Drink API staging — request rate",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [{"expr": "rate(http_requests_total{job=\"drink_api_staging\"}[5m])"}]
+    }
+  ]
+}

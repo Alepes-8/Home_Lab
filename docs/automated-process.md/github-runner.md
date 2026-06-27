@@ -38,7 +38,6 @@ This token allows `drink_api_home_lab` to call GitHub's API and trigger a workfl
 6. Add it as a secret **in `drink_api_home_lab`** (the repo that sends the dispatch, not `Home_Lab`):
    `drink_api_home_lab` → Settings → Secrets and variables → Actions → New repository secret
    Name: `HOMELAB_DISPATCH_TOKEN`
-   
 ### Part 2 — Register the runner on the server
  
 This installs and registers the actual runner process on `hp-z240-server`, scoped to the `Home_Lab` repo.
@@ -141,9 +140,33 @@ This workflow file must exist on `Home_Lab`'s default branch (typically `main`) 
 | Runner registered (`homelab-runner`) | Done |
 | Runner installed as systemd service, verified running | Done |
 | Docker access verified for runner's user | Done |
-| `deploy-staging.yml` committed to `Home_Lab` | Pending |
-| Dispatch step added to `drink_api_home_lab`'s staging workflow | Pending |
-| Full end-to-end test (push → build → dispatch → deploy) | Not yet run |
+| `deploy-staging.yml` committed to `Home_Lab` | Done |
+| Dispatch step added to `drink_api_home_lab`'s staging workflow | Done |
+| Full end-to-end test (push → build → dispatch → deploy) | Done — verified via container restart time and matching `sha` in `/drink/health` |
+ 
+## Troubleshooting notes
+ 
+### `env file ... not found` — runner has its own separate checkout
+ 
+**Symptom:** `docker compose pull` succeeds, but `docker compose up -d` fails with something like:
+```
+env file /home/.../runners/runner-homelab/_work/Home_Lab/Home_Lab/docker-compose/.env.staging not found
+```
+ 
+**Cause:** The self-hosted runner does not reuse any manually-cloned copy of the repo (e.g. `~/Home_Lab/`). Every job, `actions/checkout` performs a **fresh clone** into the runner's own isolated workspace (`~/runners/runner-homelab/_work/<repo>/<repo>/`), and wipes/re-clones it on every single run. `.env.staging`/`.env.prod` are correctly gitignored (they hold secrets) and so are never present in this fresh checkout.
+ 
+A relative `env_file:` path (`- .env.staging`) resolves relative to **wherever Docker Compose is invoked from at runtime** — not relative to the compose file's location on disk. Since the runner's checkout path is different from your manual clone's path, the same relative reference silently breaks depending on which one is running the command.
+ 
+**Fix:** Point `env_file` at an absolute, permanent path on the server instead of a relative one — the one real copy of the file, living outside any git checkout, in your manually-cloned `Home_Lab` folder:
+ 
+```yaml
+env_file:
+  - /home/homelab/Home_Lab/docker-compose/.env.staging
+```
+ 
+This must be committed to the compose file in git so the runner's fresh checkout picks it up too — it's not something that can be fixed by only editing the server's manual clone.
+ 
+**If you hit this again after the fix is already committed:** check that you're looking at logs from a run that actually happened *after* the fix was pushed — re-running an older workflow run will still show the old failure, since it ran against the commit that existed at that time.
  
 ## Open items / future improvements
  

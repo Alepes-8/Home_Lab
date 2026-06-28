@@ -31,8 +31,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    ports:
-      - "${PORT:-5002}:${PORT:-5002}"
 
 volumes:
   mongo-staging-data:

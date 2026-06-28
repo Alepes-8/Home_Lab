@@ -315,16 +315,12 @@ echo
 echo "    6. Run the monitoring stack:"
 echo "       docker compose -f docker-compose/docker-compose.monitoring.yml up -d"
 echo
-echo "    7. Add /metrics location block to nginx on the old PC"
-echo "       - See nginx/sites/homesystem.local.conf"
-echo "       - Allows Prometheus on the Pi to scrape metrics through nginx port 80"
-echo
-echo "    8. Verify services are reachable:"
+echo "    7. Verify services are reachable:"
 echo "       - Grafana:    http://$PI_LAN_IP:3100"
 echo "       - Prometheus: http://$PI_LAN_IP:9090"
 echo "       - WireGuard:  sudo wg show"
 echo
-echo "    9. Test VPN end-to-end:"
+echo "    8. Test VPN end-to-end:"
 echo "       - Disconnect from home WiFi"
 echo "       - Connect via WireGuard client"
 echo "       - Verify staging.local, homesystem.local, and Grafana all respond correctly"

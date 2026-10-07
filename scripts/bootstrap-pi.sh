@@ -184,6 +184,28 @@ fi
 ufw status verbose
 
 # =============================================================
+#  5.5. CREATE MONITORING ENV FILE
+#     Lets Prometheus resolve the app server's hostnames
+#     (homesystem.local, staging.local) without relying on
+#     DNS or the host's /etc/hosts — see docs/prometheus.md
+# =============================================================
+
+section "Creating monitoring environment file"
+
+HOME_LAB_DIR="$REAL_HOME/Home_Lab"
+MONITORING_ENV="$HOME_LAB_DIR/docker-compose/.env.monitoring"
+
+if [[ -f "$MONITORING_ENV" ]]; then
+    echo "  .env.monitoring already exists — skipping."
+else
+    cat > "$MONITORING_ENV" << EOF
+SERVER_LAN_IP=${SERVER_LAN_IP}
+EOF
+    chown "$REAL_USER:$REAL_USER" "$MONITORING_ENV"
+    echo "  Created docker-compose/.env.monitoring"
+fi
+
+# =============================================================
 #  6. CONFIGURE WIREGUARD SERVER
 # =============================================================
 
@@ -313,7 +335,7 @@ echo "       - Install WireGuard client app on each device and configure"
 echo "       - Reload WireGuard: sudo wg-quick down wg0 && sudo wg-quick up wg0"
 echo
 echo "    6. Run the monitoring stack:"
-echo "       docker compose -f docker-compose/docker-compose.monitoring.yml up -d"
+echo "       cd docker-compose && docker compose --env-file .env.monitoring -f docker-compose.monitoring.yml up -d"
 echo
 echo "    7. Verify services are reachable:"
 echo "       - Grafana:    http://$PI_LAN_IP:3100"

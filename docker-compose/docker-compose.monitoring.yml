@@ -26,8 +26,8 @@ services:
     networks:
       - monitoring
     extra_hosts:
-      - "homesystem.local:${Z240_IP}"
-      - "staging.local:${Z240_IP}"
+      - "homesystem.local:${SERVER_LAN_IP}"
+      - "staging.local:${SERVER_LAN_IP}"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
